@@ -11,47 +11,60 @@ exports.load=function(req, res, next, quizId){
 	  next();
 	} else { next(new Error('No existe quizId=' + quizId));}
       }
-     ).catch(function(error){next(error);});
+     ).catch(function(error){next(error)});
 };
 
 
 //GET /quizes
 exports.index=function(req, res){
   models.Quiz.findAll().then(function(quizes){
-    res.render('quizes/index', {quizes: quizes});
-  }).catch(function(error){next(error);})
+    res.render('quizes/index', {quizes: quizes, errors: []});
+  }).catch(function(error){next(error)});
 };
 
-//GET /quizes/:id
-exports.show=function(req, res){
-  	res.render('quizes/show',{quiz: req.quiz});
+// GET /quizes/ :id
+exports.show= function(req, res) {
+  res.render('quizes/show', { quiz: req.quiz, errors: []});
 };
 
-//GET /quizes/:id/answer
-exports.answer=function(req, res){
-  var resultado='Incorrecto';
-  if (req.query.respuesta===req.quiz.respuesta){
-     resultado='Correcto';
+// GET /quizes/:id/answer
+exports.answer= function(req, res) {
+  var resultado= 'Incorrecto';
+  if (req.query.respuesta=== req.quiz.respuesta) {
+    resultado= 'Correcto';
   }
-  res.render('quizes/answer', {quiz:req.quiz, respuesta: resultado});
-  };
-
-  //GET /quizes/new
-exports.new=function(req, res){
-  var quiz=models.Quiz.build(// crea objeto quiz
-	{pregunta:"Pregunta", respuesta:"Respuesta"}
+  res.render(
+    'quizes/answer',
+    { quiz: req.quiz,
+      respuesta: resultado,
+      errors: []
+    }
   );
+};
 
-  res.render('quizes/new', {quiz:quiz});
+// GET /quizes/new, // build crea objeto quiz
+exports.new = function(req, res) {
+  var quiz = models.Quiz.build(
+    {pregunta: "Pregunta", respuesta: "Respuesta"}
+  );
+  res.render('quizes/new', {quiz: quiz, errors: []});
 };
 
 // POST /quizes/create
 exports.create=function(req, res){
-  var quiz=models.Quiz.build(req.body.quiz);
-
-// guarda en BD los campos pregunta y respuesta de Quiz
-
- quiz.save({fields: ["pregunta", "respuesta"]}).then(function(){
-   res.redirect('/quizes');
- }) // Redirección HTTP (URL Relativo) lista de preguntas
+  var quiz= models.Quiz.build( req.body.quiz );
+  quiz
+  .validate()
+  .then(
+    function(err){
+	if (err) {
+	  res.render('quizes/new', {quiz: quiz, errors: err.errors});
+	} else {
+	  // save: guarda en BD campos pregunta y respuesta de quiz
+	  quiz
+	  .save({fields: ["pregunta","respuesta"]})
+	  .then( function(){ res.redirect('/quizes')})
+	} // res.redirect: Redirección HTTP a la lista de preguntas
+    }
+  );
 };
