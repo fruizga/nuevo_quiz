@@ -8,6 +8,13 @@
 <body>
 <h2>Quiz: el juego de las preguntas</h2>
 
+<form method="get" action="/quizes">
+Buscar Pregunta: <p>
+	<input type="text" name="search" value="">
+	<input type="submit" value="Enviar">
+</form>
+
+
 <table>
 <% var i; for (i=0; i<quizes.length; i++){ %>
    <tr><td><a href="quizes/<%= quizes[i].id %>"><%= quizes[i].pregunta %> </a></td>
