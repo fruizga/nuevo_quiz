@@ -1,5 +1,5 @@
 
-//Nuevo cambio
+//Nuevo cambio renuevo
 var models= require('../models/models.js');
 
 //Autoload - factoriza el código i ruta incluye:quizId
