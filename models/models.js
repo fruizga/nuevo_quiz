@@ -32,10 +32,10 @@ var quiz_path=path.join(__dirname,'quiz');
 var Quiz=sequelize.import(quiz_path);
 
 // Importar definición de la tabla Comment
-var comment_path= payh.join(__dirname,'comment');
+var comment_path= path.join(__dirname,'comment');
 var Comment= sequelize.import(comment_path);
 
-Comments.belongsTo(Quiz);
+Comment.belongsTo(Quiz);
 Quiz.hasMany(Comment);
 
 exports.Quiz=Quiz; //exportar definición de tabla Quiz
