@@ -20,14 +20,14 @@ exports.new= function(req, res) {
   res.render('comments/new.ejs', {quizid: req.params.quizId, errors: []});
 };
 
-// POST /quizes/:quizId/comments
+// POST /quizes/:quizId/comments crear comentarios
 exports.create= function(req, res) {
   var comment= models.Comment.build(
     { texto: req.body.comment.texto,
       QuizId: req.params.quizId
       });
 
-  comment
+  comment // para validar comentario
   .validate()
   .then(
     function(err){
