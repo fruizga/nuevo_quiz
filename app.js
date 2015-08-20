@@ -45,6 +45,25 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Control de Tiempo
+
+app.use(function(req,res,next){
+  var tiempoActual = new Date().getTime();
+  if(req.session.tiempo){
+    var resta = tiempoActual - req.session.tiempo;
+    if(resta>120000){
+      delete req.session.tiempo;
+      //res.write('La sesion ha caducado\n');
+      res.redirect("/logout");
+    } else{
+      req.session.tiempo = tiempoActual;
+    }
+  }
+  next();
+});
+
+
+
 app.use('/', routes);
 
 
